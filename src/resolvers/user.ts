@@ -2,6 +2,7 @@ import { Resolver, Mutation, InputType, Field, Arg, Ctx, ObjectType } from 'type
 import { MyContext } from '../types'
 import { User } from '../entities/User';
 import argon2 from 'argon2';
+import generateToken from '../utils/generateToken';
 
 //Alternate way to take input
 @InputType()
@@ -28,6 +29,9 @@ class UserResponse{
 
     @Field(()=> User, {nullable: true})
     user?: User;
+
+    @Field(()=> String)
+    token?: string;
 }
 
 @Resolver()
@@ -56,6 +60,7 @@ export class UserResolver {
         }
         const hashedPassword = await argon2.hash(options.password);
         const user = ctx.em.create(User, {username: options.username, password: hashedPassword});
+        const token = generateToken(user.username);
         try{
             await ctx.em.persistAndFlush(user);
         } catch(e){
@@ -70,7 +75,8 @@ export class UserResolver {
             }
         }
         return {
-            user
+            user,
+            token
         };
     }
 
@@ -103,8 +109,10 @@ export class UserResolver {
             }
         }
 
+        const token = generateToken(user.username);
         return {
-            user
+            user,
+            token
         }
     }
 }

@@ -12,6 +12,12 @@ import { HelloResolver } from './resolvers/hello';
 import { PostResolver } from './resolvers/post';
 import { UserResolver } from './resolvers/user';
 
+// import redis from 'redis'
+// import session from "express-session";
+// import connectRedis from 'connect-redis';
+
+//https://javascript.plainenglish.io/authentication-and-authorization-with-jwt-in-a-graphql-server-d9cf6085f961
+
 //MikroORM.init() returns a promise
 
 //Cant use await in a top level function
@@ -34,6 +40,20 @@ const main = async () => {
     // app.get('/', (_,res)=>{
     //     res.send('Server running');
     // })
+
+    // const RedisStore = connectRedis(session)
+    // const redisClient = redis.createClient({
+    //     url: '127.0.0.1:6379'
+    // });
+
+    // app.use(
+    //     session({
+    //         store: new RedisStore({ client: redisClient }),
+    //         saveUninitialized: false,
+    //         secret: "keyboard cat",
+    //         resave: false,
+    //     })
+    // )
 
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
